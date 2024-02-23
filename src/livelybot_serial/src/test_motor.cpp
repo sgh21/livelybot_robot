@@ -11,7 +11,7 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
     int f = 1000;
     ros::Rate r(f);
-    robot rb;
+    lively_robot::robot rb;
     ROS_INFO("\033[1;32mSTART\033[0m");
     // ========================== singlethread send =====================
     // rb.test_ser_motor();

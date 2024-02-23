@@ -375,6 +375,7 @@ void ConvexMPCLocomotion::updateMPCIfNeeded(int *mpcTable, ControlFSMData &data,
     const double max_pos_error = .05;//最大位置误差
     double xStart = world_position_desired[0];
     double yStart = world_position_desired[1];
+    double hight = world_position_desired[2];
 
     if (xStart - p[0] > max_pos_error)
       xStart = p[0] + max_pos_error;

@@ -20,7 +20,7 @@ private:
     std::string motor_name;
 
 public:
-    cdc_acm_rx_message_t cmd;
+    cdc_acm_rx_message_t cmd;// the cmd to motor
     motor(int _motor_num, int _CANport_num, int _CANboard_num) : CANport_num(_CANport_num), CANboard_num(_CANboard_num)
     {
         if (n.getParam("robot/CANboard/No_" + std::to_string(_CANboard_num) + "_CANboard/CANport/CANport_" + std::to_string(_CANport_num) + "/motor/motor" + std::to_string(_motor_num) + "/name", motor_name))
