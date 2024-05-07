@@ -21,12 +21,13 @@ robot:
                 id: 2
                 name: "L_toe"
                 num: 5
-                
+                posInURDF: 4
             motor2:
                 type: 0
                 id: 4
-                name: "L_calf"
+                name: "L_thigh"
                 num: 4
+                posInURDF: 2
 
         CANport_2:
           motor_num: 3
@@ -36,16 +37,19 @@ robot:
                 id: 6 
                 name: "L_hip"
                 num: 1
+                posInURDF: 0
               motor2:
                 type: 0
                 id: 5
                 name: "L_hip2"
                 num: 2
+                posInURDF: 1
               motor3:
                 type: 0
                 id: 3
-                name: "L_thigh"
+                name: "L_calf"
                 num: 3
+                posInURDF: 3
     No_2_CANboard:
       CANport_num: 2
       CANport:
@@ -57,11 +61,13 @@ robot:
                 id: 2
                 name: "R_toe"
                 num: 10
+                posInURDF: 9
             motor2:
                 type: 0
                 id: 4
-                name: "R_calf"
+                name: "R_thigh"
                 num: 9
+                posInURDF: 7
 
         CANport_2:
           motor_num: 3
@@ -71,13 +77,16 @@ robot:
                 id: 6
                 name: "R_hip"
                 num: 6
+                posInURDF: 5
               motor2:
                 type: 0
                 id: 5
                 name: "R_hip2"
                 num: 7
+                posInURDF: 6
               motor3:
                 type: 0
                 id: 3
-                name: "R_thigh"
+                name: "R_calf"
                 num: 8
+                posInURDF: 8

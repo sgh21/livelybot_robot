@@ -1,7 +1,7 @@
 robot:
   robot_name: "HuangPx HECTOR"
   arm_dof: 0
-  leg_dof: 5
+  leg_dof: 6
   Serial_Type: "/dev/ttyUSB"
   Seial_baudrate: 4000000
   Serial_allocate: "1for2" #一个ft4232带2块CANboard,此时默认一块板子引出2个串口,一个串口与一个CAN口相对应
@@ -14,70 +14,80 @@ robot:
       CANport_num: 2
       CANport:
         CANport_1:
-          motor_num: 2
+          motor_num: 3
           motor:
             motor1:
-                type: 0
-                id: 2
-                name: "L_toe"
-                num: 5
-                
+                type: 2
+                id: 1
+                name: "L_toe_low"
+                num: 6
             motor2:
-                type: 0
+                type: 2
+                id: 2
+                name: "L_toe_up"
+                num: 5
+            motor3:
+                type: 3
                 id: 4
-                name: "L_calf"
-                num: 4
-
+                name: "L_thigh"
+                num: 3
+            
         CANport_2:
           motor_num: 3
           motor:
               motor1:
-                type: 0
-                id: 6 
+                type: 3
+                id: 6
                 name: "L_hip"
                 num: 1
               motor2:
-                type: 0
+                type: 3
                 id: 5
                 name: "L_hip2"
                 num: 2
               motor3:
-                type: 0
+                type: 3
                 id: 3
-                name: "L_thigh"
-                num: 3
+                name: "L_calf"
+                num: 4
+              
     No_2_CANboard:
       CANport_num: 2
       CANport:
         CANport_1:
-          motor_num: 2
+          motor_num: 3
           motor:
             motor1:
-                type: 0
-                id: 2
-                name: "R_toe"
-                num: 10
+                type: 2
+                id: 1
+                name: "R_toe_low"
+                num: 6
             motor2:
-                type: 0
+                type: 2
+                id: 2
+                name: "R_toe_up"
+                num: 5
+            motor3:
+                type: 3
                 id: 4
-                name: "R_calf"
-                num: 9
+                name: "R_thigh"
+                num: 3
 
         CANport_2:
           motor_num: 3
           motor:
               motor1:
-                type: 0
+                type: 3
                 id: 6
                 name: "R_hip"
-                num: 6
+                num: 1
               motor2:
-                type: 0
+                type: 3
                 id: 5
                 name: "R_hip2"
-                num: 7
+                num: 2
               motor3:
-                type: 0
+                type: 3
                 id: 3
-                name: "R_thigh"
-                num: 8
+                name: "R_calf"
+                num: 4

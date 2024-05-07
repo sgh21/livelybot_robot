@@ -7,48 +7,47 @@
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "test_motor");
+    ros::init(argc, argv, "test_motor_run");
     ros::NodeHandle n;
-    ros::Rate r(400);
+    ros::Rate r(5);
     livelybot_serial::robot rb;
     ROS_INFO("\033[1;32mSTART\033[0m");
     // ========================== singlethread send =====================
-    float derta = 0.01;//角度
+    // rb.test_ser_motor();
+    // while (0)
     int cont = 0;
-    float angle = 0.0;
+    size_t n_motors = 6;
+    double torque=0;
     while (ros::ok()) // 此用法为逐个电机发送控制指令
     {
+        if(torque>1)torque=0;
+        torque+=0.01;
+        
         // ROS_INFO_STREAM("START");
         /////////////////////////send
-        for (motor *m : rb.Motors)
-        {
-            //m->fresh_cmd(0.0, 0.0, 0.0, 0.0, 0.0);
-             m->fresh_cmd(angle, 0.0, 0.0, 10.0, 0.0);
-        }
-        angle+=derta;
-        cont++;
-        if(cont==1000)
-        {
-            cont = 0;
-            derta*=-1;
-        }
+        size_t i=5;
+
+        rb.Motors[i]->fresh_cmd(0.0, 0.0, torque, 0, 0);
         rb.motor_send();
+        motor_back_t motor;
+        motor = *rb.Motors[i]->get_current_motor_state();
+        ROS_INFO_STREAM("ID: " << motor.ID << 
+                            " desire torque: " << torque <<
+                            " get torque: " << motor.torque);
+            
+        
+        // rb.Motors[9]->fresh_cmd(0.2, 0.0, 0.0, 1.5, 0.01);
         ////////////////////////recv
-        for (motor *m : rb.Motors)
+        cont++;
+        if (cont==180000)
         {
-            motor_back_t motor;
-            motor = *m->get_current_motor_state();
-            ROS_INFO("ID:%d pos: %8f,vel: %8f,tor: %8f", motor.ID, motor.position, motor.velocity, motor.torque);
+            break;
         }
-        // ROS_INFO_STREAM("END"); //
         r.sleep();
     }
-
     for (auto &thread : rb.ser_recv_threads)
     {
         thread.join();
     }
-
-    ros::spin();
     return 0;
 }

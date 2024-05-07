@@ -28,22 +28,24 @@ void lively_serial::recv()
                 auto it = Map_Motors_p.find(cdc_acm_tx_message.motor_back_raw.ID);
                 if (it != Map_Motors_p.end())
                 {
+
                     it->second->fresh_data(cdc_acm_tx_message.motor_back_raw.position,
                                            cdc_acm_tx_message.motor_back_raw.velocity,
                                            cdc_acm_tx_message.motor_back_raw.torque);
+
                     // ROS_INFO("%d", it->second->get_motor_id());
                     // ROS_INFO("END");
                 }
                 else
                 {
-                    // ROS_ERROR("OUT RANGE");
+                    ROS_ERROR("OUT RANGE");
                 }
             }
             else
             {
                 // ROS_INFO("%X %X",cdc_acm_tx_message.crc16,crc_ccitt(0x0000, (const uint8_t *)&cdc_acm_tx_message, sizeof(cdc_acm_tx_message_t) - 2));
                 memset(&cdc_acm_tx_message.motor_back_raw,0,sizeof(cdc_acm_tx_message_t) - 2);
-                // ROS_ERROR("CRC ERROR");
+                ROS_ERROR("CRC ERROR");
             }
         }
         else

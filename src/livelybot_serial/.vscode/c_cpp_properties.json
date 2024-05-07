@@ -1,0 +1,62 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/sunteng/control_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_sqp/hpipm_catkin/include/**",
+        "/home/sunteng/control_ws/src/hpp-fcl/include/**",
+        "/home/sunteng/control_ws/src/hunter_bipedal_control/legged_examples/legged_bridge/legged_bridge_hw/include/**",
+        "/home/sunteng/control_ws/src/hunter_bipedal_control/legged_common/include/**",
+        "/home/sunteng/control_ws/src/hunter_bipedal_control/legged_controllers/include/**",
+        "/home/sunteng/control_ws/src/hunter_bipedal_control/legged_estimation/include/**",
+        "/home/sunteng/control_ws/src/hunter_bipedal_control/legged_gazebo/include/**",
+        "/home/sunteng/control_ws/src/hunter_bipedal_control/legged_hw/include/**",
+        "/home/sunteng/control_ws/src/hunter_bipedal_control/legged_interface/include/**",
+        "/home/sunteng/control_ws/src/hunter_bipedal_control/legged_wbc/include/**",
+        "/home/sunteng/control_ws/src/livelybot_robot/src/livelybot_imu/include/**",
+        "/home/sunteng/control_ws/src/livelybot_robot/src/livelybot_serial/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_pinocchio/ocs2_centroidal_model/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_core/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_ddp/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_frank_wolfe/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_ipm/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_robotic_examples/ocs2_legged_robot/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_mpcnet/ocs2_legged_robot_mpcnet/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_raisim/ocs2_legged_robot_raisim/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_robotic_examples/ocs2_legged_robot_ros/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_mpc/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_mpcnet/ocs2_mpcnet_core/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_oc/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_ocs2/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_perceptive/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_pinocchio/ocs2_pinocchio_interface/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_python_interface/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_test_tools/ocs2_qp_solver/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_raisim/ocs2_raisim_core/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_raisim/ocs2_raisim_ros/include/**",
+        "/home/sunteng/control_ws/src/ocs2_robotic_assets/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_robotic_tools/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_ros_interfaces/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_pinocchio/ocs2_self_collision/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_pinocchio/ocs2_self_collision_visualization/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_slp/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_pinocchio/ocs2_sphere_approximation/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_sqp/ocs2_sqp/include/**",
+        "/home/sunteng/control_ws/src/ocs2/ocs2_thirdparty/include/**",
+        "/home/sunteng/control_ws/src/livelybot_robot/src/serial/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

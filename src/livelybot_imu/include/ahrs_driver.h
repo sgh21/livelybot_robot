@@ -1,5 +1,6 @@
 #ifndef BASE_DRIVER_H_
 #define BASE_DRIVER_H_
+#include <thread>
 
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
@@ -18,7 +19,8 @@
 #include <ros/package.h>
 #include <crc_table.h>
 #include <shared_mutex>
-
+#include <Eigen/Core>
+#include <Eigen/Eigen>
 using namespace std;
 
 
@@ -41,7 +43,9 @@ namespace FDILink
 
 class ahrsBringup
 {
+
 public:
+
   ahrsBringup();
   ~ahrsBringup();
   void processLoop();
@@ -56,7 +60,8 @@ private:
 
   mutable std::shared_mutex rwMutex;
   sensor_msgs::Imu last_imu_data;
-
+  bool loop_flag=false;
+  std::shared_ptr<std::thread> myThread;
 
   bool if_debug_;
   //sum info

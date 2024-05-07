@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(livelybot_serial)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 # Find catkin
 find_package(catkin REQUIRED COMPONENTS
     roscpp
@@ -11,14 +8,17 @@ find_package(catkin REQUIRED COMPONENTS
     livelybot_msg  
     serial
 )
+
 set(rt_LIBRARIES rt)
 set(pthread_LIBRARIES pthread)
 set(serial_SRCS
     include/hardware/robot.h
     include/hardware/motor.h
+    include/robot_node.h
     src/lively_serial.cc
     src/hardware/motor.cc
 )
+
 catkin_package(
     LIBRARIES ${PROJECT_NAME}
     INCLUDE_DIRS include
@@ -35,11 +35,33 @@ include_directories(
 add_executable(lvbot_test src/serial_t.cpp ${serial_SRCS})
 target_link_libraries(lvbot_test ${catkin_LIBRARIES})
 
+add_executable(ik_run src/ik_run.cpp ${serial_SRCS})
+target_link_libraries(ik_run ${catkin_LIBRARIES})
+
+add_executable(robot_node_ src/robot_node.cpp ${serial_SRCS})
+target_link_libraries(robot_node_ ${catkin_LIBRARIES})
+
+
+add_executable(test_2dof_ankle src/test_2dof_ankle.cpp ${serial_SRCS})
+target_link_libraries(test_2dof_ankle ${catkin_LIBRARIES})
+
 add_executable(test_motor_run src/test_motor_run.cpp ${serial_SRCS})
 target_link_libraries(test_motor_run ${catkin_LIBRARIES})
 
+add_executable(test_motor_run_18 src/test_motor_run_18.cpp ${serial_SRCS})
+target_link_libraries(test_motor_run_18 ${catkin_LIBRARIES})
+
+add_executable(test_motor_run_20 src/test_motor_run_20.cpp ${serial_SRCS})
+target_link_libraries(test_motor_run_20 ${catkin_LIBRARIES})
+
 add_executable(test_motor src/test_motor.cpp ${serial_SRCS})
 target_link_libraries(test_motor ${catkin_LIBRARIES})
+
+add_executable(test_motor_torque src/test_motor_torque.cpp ${serial_SRCS})
+target_link_libraries(test_motor_torque ${catkin_LIBRARIES})
+
+add_executable(test_motor_combi_pos_vel src/test_motor_combi_pos_vel.cpp ${serial_SRCS})
+target_link_libraries(test_motor_combi_pos_vel ${catkin_LIBRARIES})
 
 install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

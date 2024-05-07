@@ -13,21 +13,16 @@ int main(int argc, char **argv)
     livelybot_serial::robot rb;
     ROS_INFO("\033[1;32mSTART\033[0m");
     int cont = 0;
-    size_t n_motors = 12;
-    std::vector<motor_type> type_list{motor_type::_4538,motor_type::_4538,motor_type::_5047_36,motor_type::_5047_36,motor_type::_5047_36,motor_type::_5047_36,\
-                                    motor_type::_4538,motor_type::_4538,motor_type::_5047_36,motor_type::_5047_36,motor_type::_5047_36,motor_type::_5047_36}; //124653
+    size_t n_motors = 20;
     std::vector<std::string> motor_name{"null","5046","4538","5047_36","5047_9"}; 
-    // for(int i=0;i<type_list.size();i++)
-    // {
-    //     rb.Motors[i]->set_motor_type(type_list[i]);
-    // }
+    
     while (ros::ok()) // 此用法为逐个电机发送控制指令
     {
         // ROS_INFO_STREAM("START");
         /////////////////////////send
         for (size_t i = 0; i < n_motors; i++)
         {
-            rb.Motors[i]->fresh_cmd(0.0, 0.0, 0.0, 10.0, 0.01);
+            rb.Motors[i]->fresh_cmd(0.0, 0.0, 0.0, 10.0, 0.1);
         }
 
         rb.motor_send();
@@ -39,7 +34,7 @@ int main(int argc, char **argv)
             ROS_INFO_STREAM("ID: " << motor.ID << 
                             " Pos: " << motor.position <<
                             " torque: " << motor.torque<<
-                            " type: " << motor_name[static_cast<int>(rb.Motors[i]->get_motor_enum_type())]
+                            "  type: " << motor_name[static_cast<int>(rb.Motors[i]->get_motor_enum_type())]
                             );
         }
         cont++;

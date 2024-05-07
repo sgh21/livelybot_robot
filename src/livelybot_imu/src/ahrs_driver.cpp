@@ -1,9 +1,14 @@
 #include <ahrs_driver.h>
-#include <Eigen/Eigen>
+
+// #define EIGEN_MAX_STATIC_ALIGN_BYTES 0
+
 namespace FDILink
 {
+
 ahrsBringup::ahrsBringup() :frist_sn_(false), serial_timeout_(20)
 {
+
+   
   ros::NodeHandle private_nh("~");
   //topic_name & frame_id
   private_nh.param("debug",     if_debug_,  false);
@@ -14,6 +19,7 @@ ahrsBringup::ahrsBringup() :frist_sn_(false), serial_timeout_(20)
   //serial                                                 
   private_nh.param("port", serial_port_, std::string("/dev/ttyTHS1")); 
   private_nh.param("baud", serial_baud_, 921600);
+
   //publisher
   imu_pub_ = nh_.advertise<sensor_msgs::Imu>(imu_topic_.c_str(), 10);
   gps_pub_ = nh_.advertise<sensor_msgs::NavSatFix>("/gps/fix", 10);
@@ -33,9 +39,10 @@ ahrsBringup::ahrsBringup() :frist_sn_(false), serial_timeout_(20)
   }
   catch (serial::IOException &e)
   {
-    ROS_ERROR_STREAM("Unable to open port ");
+    ROS_ERROR_STREAM("Unable to open port "+serial_port_);
     exit(0);
   }
+
   if (serial_.isOpen())
   {
     ROS_INFO_STREAM("Serial Port initialized");
@@ -45,11 +52,20 @@ ahrsBringup::ahrsBringup() :frist_sn_(false), serial_timeout_(20)
     ROS_ERROR_STREAM("Unable to initial Serial port ");
     exit(0);
   }
-  processLoop();
+
+  // processLoop();
+  myThread = std::make_shared<std::thread>(std::bind(&FDILink::ahrsBringup::processLoop, this));
+
+  
+
+
 }
 
 ahrsBringup::~ahrsBringup()
 {
+  loop_flag=true;
+  if(myThread->joinable())
+    myThread->join();
   if (serial_.isOpen())
     serial_.close();
 }
@@ -72,11 +88,12 @@ void ahrsBringup::getLastImuDate(double &q_w, double &q_x, double &q_y, double &
 void ahrsBringup::processLoop()
 {
   ROS_INFO("ahrsBringup::processLoop: start");
-  while (ros::ok())
+  while (ros::ok()&&!loop_flag)
   {
     if (!serial_.isOpen())
     {
       ROS_WARN("serial unopen");
+      return;
     }
     //check head start
     uint8_t check_head[1] = {0xff};
@@ -397,7 +414,7 @@ void ahrsBringup::processLoop()
         continue;
       }
     }
-
+    
     // publish magyaw topic
     if (head_type[0] == TYPE_AHRS)
     {
@@ -405,7 +422,7 @@ void ahrsBringup::processLoop()
       sensor_msgs::Imu imu_data;
       imu_data.header.stamp = ros::Time::now();
       imu_data.header.frame_id = imu_frame_id_.c_str();
-      Eigen::Quaterniond q_ahrs(ahrs_frame_.frame.data.data_pack.Qw,
+       Eigen::Quaterniond q_ahrs(ahrs_frame_.frame.data.data_pack.Qw,
                                 ahrs_frame_.frame.data.data_pack.Qx,
                                 ahrs_frame_.frame.data.data_pack.Qy,
                                 ahrs_frame_.frame.data.data_pack.Qz);
@@ -421,6 +438,9 @@ void ahrsBringup::processLoop()
           Eigen::AngleAxisd( 3.14159/2, Eigen::Vector3d::UnitZ()) * 
           Eigen::AngleAxisd( 0.00000, Eigen::Vector3d::UnitY()) * 
           Eigen::AngleAxisd( 3.14159, Eigen::Vector3d::UnitX());
+          // Eigen::AngleAxisd( 3.14159/2, Eigen::Vector3d::UnitZ()) * 
+          // Eigen::AngleAxisd( 0.00000, Eigen::Vector3d::UnitY()) * 
+          // Eigen::AngleAxisd( 3.14159, Eigen::Vector3d::UnitX());
       if (device_type_ == 0)         //未经变换的原始数据
       {
         imu_data.orientation.w = ahrs_frame_.frame.data.data_pack.Qw;
@@ -438,7 +458,8 @@ void ahrsBringup::processLoop()
       else if (device_type_ == 1)    //imu单品ROS标准下的坐标变换
       {
         
-        Eigen::Quaterniond q_out =  q_r * q_ahrs * q_rr;
+        // Eigen::Quaterniond q_out =  q_r * q_ahrs * q_rr;
+         Eigen::Quaterniond q_out =  q_r * q_ahrs * q_rr;
         imu_data.orientation.w = q_out.w();
         imu_data.orientation.x = q_out.x();
         imu_data.orientation.y = q_out.y();
@@ -450,7 +471,38 @@ void ahrsBringup::processLoop()
         imu_data.linear_acceleration.y = -imu_frame_.frame.data.data_pack.accelerometer_y;
         imu_data.linear_acceleration.z = -imu_frame_.frame.data.data_pack.accelerometer_z;
       }
-
+      else if (device_type_ == 2)    //imu板子上示意的方向
+      {
+          Eigen::Quaterniond q_y (Eigen::AngleAxisd( 3.14159, Eigen::Vector3d::UnitY())) ;
+        // Eigen::Quaterniond q_out =  q_r * q_ahrs * q_rr;
+        Eigen::Quaterniond q_out =  q_y* q_ahrs  ; // 因为安装方向是地磁方向位姿0位绕y轴180度得到
+        imu_data.orientation.w = -q_out.w();
+        imu_data.orientation.x = -q_out.x();
+        imu_data.orientation.y = -q_out.y();
+        imu_data.orientation.z = -q_out.z();
+        imu_data.angular_velocity.x = ahrs_frame_.frame.data.data_pack.RollSpeed;
+        imu_data.angular_velocity.y = ahrs_frame_.frame.data.data_pack.PitchSpeed;
+        imu_data.angular_velocity.z = ahrs_frame_.frame.data.data_pack.HeadingSpeed;
+        imu_data.linear_acceleration.x = imu_frame_.frame.data.data_pack.accelerometer_x;
+        imu_data.linear_acceleration.y = imu_frame_.frame.data.data_pack.accelerometer_y;
+        imu_data.linear_acceleration.z = imu_frame_.frame.data.data_pack.accelerometer_z;
+      }
+      else if (device_type_ == 3)    //闭环zmp的imu方向
+      {
+          Eigen::Quaterniond q_y (Eigen::AngleAxisd( 3.14159, Eigen::Vector3d::UnitY())) ;
+        // Eigen::Quaterniond q_out =  q_r * q_ahrs * q_rr;
+        Eigen::Quaterniond q_out =  q_y* q_ahrs  ; // 因为安装方向是地磁方向位姿0位绕y轴180度得到
+        imu_data.orientation.w = -q_out.w();
+        imu_data.orientation.x = -q_out.x();
+        imu_data.orientation.y = -q_out.y();
+        imu_data.orientation.z = -q_out.z();
+        imu_data.angular_velocity.x = ahrs_frame_.frame.data.data_pack.RollSpeed;
+        imu_data.angular_velocity.y = ahrs_frame_.frame.data.data_pack.PitchSpeed;
+        imu_data.angular_velocity.z = ahrs_frame_.frame.data.data_pack.HeadingSpeed;
+        imu_data.linear_acceleration.x = imu_frame_.frame.data.data_pack.accelerometer_x;
+        imu_data.linear_acceleration.y = imu_frame_.frame.data.data_pack.accelerometer_y;
+        imu_data.linear_acceleration.z = imu_frame_.frame.data.data_pack.accelerometer_z;
+      }
       {
         std::unique_lock<std::shared_mutex> writeLock(rwMutex);
         last_imu_data=imu_data;
@@ -458,7 +510,7 @@ void ahrsBringup::processLoop()
 
       imu_pub_.publish(imu_data);
 
-      Eigen::Quaterniond rpy_q(imu_data.orientation.w,
+       Eigen::Quaterniond rpy_q(imu_data.orientation.w,
                                imu_data.orientation.x,
                                imu_data.orientation.y,
                                imu_data.orientation.z);
@@ -475,7 +527,6 @@ void ahrsBringup::processLoop()
         magx  = imu_frame_.frame.data.data_pack.magnetometer_x;
         magy  = imu_frame_.frame.data.data_pack.magnetometer_y;
         magz  = imu_frame_.frame.data.data_pack.magnetometer_z;
-        
         Eigen::Vector3d EulerAngle = rpy_q.matrix().eulerAngles(2, 1, 0);
         roll  = EulerAngle[2];
         pitch = EulerAngle[1];
@@ -625,6 +676,6 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "ahrs_bringup");
   FDILink::ahrsBringup bp;
-
+  ros::spin();
   return 0;
 }

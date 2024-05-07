@@ -1,8 +1,0 @@
-<library path="lib/liblivelybot_gazebo_motor_control">
-    <class name="livelybot_gazebo_motor_control/LivelyBotGazeboMotorController" 
-           type="livelybot_gazebo_motor_control::LivelyBotGazeboMotorController"           
-           base_class_type="controller_interface::ControllerBase"/>
-        <description>
-            The Livelybot Gazebo Motor controller.
-        </description>
-</library>

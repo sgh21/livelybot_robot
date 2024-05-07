@@ -4,9 +4,7 @@
 #include "canboard.h"
 #include "ros/ros.h"
 #include <thread>
-
-namespace lively_robot{
-
+namespace livelybot_serial{
 class robot
 {
 private:
@@ -106,8 +104,10 @@ public:
             // std::thread(&canport::send, &cp);
             cp->puch_motor(&Motors);
         }
+        
         // test_ser_motor();
         ROS_INFO("\033[1;32mThe robot has %ld motors\033[0m", Motors.size());
+        ROS_INFO("robot init");
         // for (motor m:Motors)
         // {
         //     std::cout<<m.get_motor_belong_canboard()<<" "<<m.get_motor_belong_canport()<<" "<<m.get_motor_id()<<std::endl;
@@ -145,6 +145,5 @@ public:
     }
     ~robot() {}
 };
-
 }
 #endif
